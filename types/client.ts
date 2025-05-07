@@ -2,10 +2,14 @@ export interface Client {
   id: string;
   name: string;
   birthday: string;
-  accountType: "Checking" | "Savings";
-  accountNumber: string;
-  balance: number;
+  checkingAccountNumber: string | null;
+  checkingBalance: number | null;
+  savingsAccountNumber: string | null;
+  savingsBalance: number | null;
   isActive?: boolean;
+  accountNumber: string;
+  accountType: "Checking" | "Savings";
+  balance: number | null;
 }
 
 export interface SearchBoxProps {
@@ -20,15 +24,15 @@ export interface SearchFilters {
 
 export interface ClientTableProps {
   clients: Client[];
-  onDetails: (accountNumber: string) => void;
-  onTransfer: (accountNumber: string) => void;
-  onClose: (accountNumber: string) => void;
+  onDetails: (client: Client) => void;
+  onTransfer: (client: Client) => void;
+  onClose: (client: Client) => void;
 }
 
 export interface ClientTableRowProps {
   client: Client;
   isEven: boolean;
-  onDetails: (accountNumber: string) => void;
-  onTransfer: (accountNumber: string) => void;
-  onClose: (accountNumber: string) => void; // Completed type signature
+  onDetails: (client: Client) => void;
+  onTransfer: (client: Client) => void;
+  onClose: (client: Client) => void;
 }

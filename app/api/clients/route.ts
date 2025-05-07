@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient, ClientType } from "../../generated/prisma"; // Corrected path
+import { PrismaClient } from "../../generated/prisma"; // Remove ClientType
 import { auth } from "../auth/[...nextauth]/route";
 import { Prisma } from "../../generated/prisma";
 
@@ -34,10 +34,11 @@ export async function GET(request: NextRequest) {
     session.user?.email
   );
 
-  // Get specific query parameters based on UI
+  // Get specific query parameters
   const name = request.nextUrl.searchParams.get("name") || "";
-  const birthday = request.nextUrl.searchParams.get("birthday") || ""; // Expecting MM / DD / YYYY format potentially
-  const type = request.nextUrl.searchParams.get("type") as ClientType | null;
+  const birthday = request.nextUrl.searchParams.get("birthday") || "";
+  const accountType = request.nextUrl.searchParams.get("accountType"); // 'Checking' or 'Savings'
+  const activeOnly = request.nextUrl.searchParams.get("activeOnly") === "true"; // Check if we need active only
 
   // Build Prisma where clause for specific fields
   const whereConditions: Prisma.ClientWhereInput[] = []; // Use an array for AND conditions
@@ -47,12 +48,19 @@ export async function GET(request: NextRequest) {
   }
 
   if (birthday) {
-    // Basic search for birthday string. Consider more robust date parsing/comparison if needed.
     whereConditions.push({ birthday: { contains: birthday } });
   }
 
-  if (type && Object.values(ClientType).includes(type)) {
-    whereConditions.push({ type: type });
+  // Add filter based on accountType
+  if (accountType === "Checking") {
+    whereConditions.push({ checkingAccountNumber: { not: null } });
+  } else if (accountType === "Savings") {
+    whereConditions.push({ savingsAccountNumber: { not: null } });
+  }
+
+  // Add filter for active status if requested
+  if (activeOnly) {
+    whereConditions.push({ isActive: true });
   }
 
   // Combine conditions with AND
@@ -67,8 +75,13 @@ export async function GET(request: NextRequest) {
   try {
     const clients = await prisma.client.findMany({
       where: whereClause,
-      orderBy: { name: "asc" },
+      orderBy: {
+        displayOrder: "asc",
+      },
     });
+
+    console.log(`Fetched ${clients.length} clients matching criteria.`);
+
     return NextResponse.json(clients, { status: 200 });
   } catch (error) {
     console.error("Error fetching clients:", error);

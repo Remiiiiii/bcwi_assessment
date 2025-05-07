@@ -124,10 +124,12 @@ exports.Prisma.ClientScalarFieldEnum = {
   id: 'id',
   name: 'name',
   birthday: 'birthday',
-  type: 'type',
-  account: 'account',
-  balance: 'balance',
-  isActive: 'isActive'
+  checkingAccountNumber: 'checkingAccountNumber',
+  checkingBalance: 'checkingBalance',
+  savingsAccountNumber: 'savingsAccountNumber',
+  savingsBalance: 'savingsBalance',
+  isActive: 'isActive',
+  displayOrder: 'displayOrder'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -180,10 +182,7 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.ClientType = exports.$Enums.ClientType = {
-  SAVINGS: 'SAVINGS',
-  CHECKING: 'CHECKING'
-};
+
 
 exports.Prisma.ModelName = {
   Client: 'Client',

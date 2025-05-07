@@ -1302,81 +1302,101 @@ export namespace Prisma {
   }
 
   export type ClientAvgAggregateOutputType = {
-    balance: Decimal | null
+    checkingBalance: Decimal | null
+    savingsBalance: Decimal | null
+    displayOrder: number | null
   }
 
   export type ClientSumAggregateOutputType = {
-    balance: Decimal | null
+    checkingBalance: Decimal | null
+    savingsBalance: Decimal | null
+    displayOrder: number | null
   }
 
   export type ClientMinAggregateOutputType = {
     id: string | null
     name: string | null
     birthday: string | null
-    type: $Enums.ClientType | null
-    account: string | null
-    balance: Decimal | null
+    checkingAccountNumber: string | null
+    checkingBalance: Decimal | null
+    savingsAccountNumber: string | null
+    savingsBalance: Decimal | null
     isActive: boolean | null
+    displayOrder: number | null
   }
 
   export type ClientMaxAggregateOutputType = {
     id: string | null
     name: string | null
     birthday: string | null
-    type: $Enums.ClientType | null
-    account: string | null
-    balance: Decimal | null
+    checkingAccountNumber: string | null
+    checkingBalance: Decimal | null
+    savingsAccountNumber: string | null
+    savingsBalance: Decimal | null
     isActive: boolean | null
+    displayOrder: number | null
   }
 
   export type ClientCountAggregateOutputType = {
     id: number
     name: number
     birthday: number
-    type: number
-    account: number
-    balance: number
+    checkingAccountNumber: number
+    checkingBalance: number
+    savingsAccountNumber: number
+    savingsBalance: number
     isActive: number
+    displayOrder: number
     _all: number
   }
 
 
   export type ClientAvgAggregateInputType = {
-    balance?: true
+    checkingBalance?: true
+    savingsBalance?: true
+    displayOrder?: true
   }
 
   export type ClientSumAggregateInputType = {
-    balance?: true
+    checkingBalance?: true
+    savingsBalance?: true
+    displayOrder?: true
   }
 
   export type ClientMinAggregateInputType = {
     id?: true
     name?: true
     birthday?: true
-    type?: true
-    account?: true
-    balance?: true
+    checkingAccountNumber?: true
+    checkingBalance?: true
+    savingsAccountNumber?: true
+    savingsBalance?: true
     isActive?: true
+    displayOrder?: true
   }
 
   export type ClientMaxAggregateInputType = {
     id?: true
     name?: true
     birthday?: true
-    type?: true
-    account?: true
-    balance?: true
+    checkingAccountNumber?: true
+    checkingBalance?: true
+    savingsAccountNumber?: true
+    savingsBalance?: true
     isActive?: true
+    displayOrder?: true
   }
 
   export type ClientCountAggregateInputType = {
     id?: true
     name?: true
     birthday?: true
-    type?: true
-    account?: true
-    balance?: true
+    checkingAccountNumber?: true
+    checkingBalance?: true
+    savingsAccountNumber?: true
+    savingsBalance?: true
     isActive?: true
+    displayOrder?: true
     _all?: true
   }
 
@@ -1470,10 +1490,12 @@ export namespace Prisma {
     id: string
     name: string
     birthday: string
-    type: $Enums.ClientType
-    account: string
-    balance: Decimal
+    checkingAccountNumber: string | null
+    checkingBalance: Decimal | null
+    savingsAccountNumber: string | null
+    savingsBalance: Decimal | null
     isActive: boolean
+    displayOrder: number | null
     _count: ClientCountAggregateOutputType | null
     _avg: ClientAvgAggregateOutputType | null
     _sum: ClientSumAggregateOutputType | null
@@ -1499,43 +1521,51 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     birthday?: boolean
-    type?: boolean
-    account?: boolean
-    balance?: boolean
+    checkingAccountNumber?: boolean
+    checkingBalance?: boolean
+    savingsAccountNumber?: boolean
+    savingsBalance?: boolean
     isActive?: boolean
+    displayOrder?: boolean
   }, ExtArgs["result"]["client"]>
 
   export type ClientSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     birthday?: boolean
-    type?: boolean
-    account?: boolean
-    balance?: boolean
+    checkingAccountNumber?: boolean
+    checkingBalance?: boolean
+    savingsAccountNumber?: boolean
+    savingsBalance?: boolean
     isActive?: boolean
+    displayOrder?: boolean
   }, ExtArgs["result"]["client"]>
 
   export type ClientSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     birthday?: boolean
-    type?: boolean
-    account?: boolean
-    balance?: boolean
+    checkingAccountNumber?: boolean
+    checkingBalance?: boolean
+    savingsAccountNumber?: boolean
+    savingsBalance?: boolean
     isActive?: boolean
+    displayOrder?: boolean
   }, ExtArgs["result"]["client"]>
 
   export type ClientSelectScalar = {
     id?: boolean
     name?: boolean
     birthday?: boolean
-    type?: boolean
-    account?: boolean
-    balance?: boolean
+    checkingAccountNumber?: boolean
+    checkingBalance?: boolean
+    savingsAccountNumber?: boolean
+    savingsBalance?: boolean
     isActive?: boolean
+    displayOrder?: boolean
   }
 
-  export type ClientOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "birthday" | "type" | "account" | "balance" | "isActive", ExtArgs["result"]["client"]>
+  export type ClientOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "birthday" | "checkingAccountNumber" | "checkingBalance" | "savingsAccountNumber" | "savingsBalance" | "isActive" | "displayOrder", ExtArgs["result"]["client"]>
 
   export type $ClientPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Client"
@@ -1544,10 +1574,12 @@ export namespace Prisma {
       id: string
       name: string
       birthday: string
-      type: $Enums.ClientType
-      account: string
-      balance: Prisma.Decimal
+      checkingAccountNumber: string | null
+      checkingBalance: Prisma.Decimal | null
+      savingsAccountNumber: string | null
+      savingsBalance: Prisma.Decimal | null
       isActive: boolean
+      displayOrder: number | null
     }, ExtArgs["result"]["client"]>
     composites: {}
   }
@@ -1974,10 +2006,12 @@ export namespace Prisma {
     readonly id: FieldRef<"Client", 'String'>
     readonly name: FieldRef<"Client", 'String'>
     readonly birthday: FieldRef<"Client", 'String'>
-    readonly type: FieldRef<"Client", 'ClientType'>
-    readonly account: FieldRef<"Client", 'String'>
-    readonly balance: FieldRef<"Client", 'Decimal'>
+    readonly checkingAccountNumber: FieldRef<"Client", 'String'>
+    readonly checkingBalance: FieldRef<"Client", 'Decimal'>
+    readonly savingsAccountNumber: FieldRef<"Client", 'String'>
+    readonly savingsBalance: FieldRef<"Client", 'Decimal'>
     readonly isActive: FieldRef<"Client", 'Boolean'>
+    readonly displayOrder: FieldRef<"Client", 'Int'>
   }
     
 
@@ -6657,10 +6691,12 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     birthday: 'birthday',
-    type: 'type',
-    account: 'account',
-    balance: 'balance',
-    isActive: 'isActive'
+    checkingAccountNumber: 'checkingAccountNumber',
+    checkingBalance: 'checkingBalance',
+    savingsAccountNumber: 'savingsAccountNumber',
+    savingsBalance: 'savingsBalance',
+    isActive: 'isActive',
+    displayOrder: 'displayOrder'
   };
 
   export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
@@ -6758,20 +6794,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'ClientType'
-   */
-  export type EnumClientTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ClientType'>
-    
-
-
-  /**
-   * Reference to a field of type 'ClientType[]'
-   */
-  export type ListEnumClientTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ClientType[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -6844,43 +6866,51 @@ export namespace Prisma {
     id?: StringFilter<"Client"> | string
     name?: StringFilter<"Client"> | string
     birthday?: StringFilter<"Client"> | string
-    type?: EnumClientTypeFilter<"Client"> | $Enums.ClientType
-    account?: StringFilter<"Client"> | string
-    balance?: DecimalFilter<"Client"> | Decimal | DecimalJsLike | number | string
+    checkingAccountNumber?: StringNullableFilter<"Client"> | string | null
+    checkingBalance?: DecimalNullableFilter<"Client"> | Decimal | DecimalJsLike | number | string | null
+    savingsAccountNumber?: StringNullableFilter<"Client"> | string | null
+    savingsBalance?: DecimalNullableFilter<"Client"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFilter<"Client"> | boolean
+    displayOrder?: IntNullableFilter<"Client"> | number | null
   }
 
   export type ClientOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     birthday?: SortOrder
-    type?: SortOrder
-    account?: SortOrder
-    balance?: SortOrder
+    checkingAccountNumber?: SortOrderInput | SortOrder
+    checkingBalance?: SortOrderInput | SortOrder
+    savingsAccountNumber?: SortOrderInput | SortOrder
+    savingsBalance?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrderInput | SortOrder
   }
 
   export type ClientWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    name?: string
+    checkingAccountNumber?: string
+    savingsAccountNumber?: string
     AND?: ClientWhereInput | ClientWhereInput[]
     OR?: ClientWhereInput[]
     NOT?: ClientWhereInput | ClientWhereInput[]
+    name?: StringFilter<"Client"> | string
     birthday?: StringFilter<"Client"> | string
-    type?: EnumClientTypeFilter<"Client"> | $Enums.ClientType
-    account?: StringFilter<"Client"> | string
-    balance?: DecimalFilter<"Client"> | Decimal | DecimalJsLike | number | string
+    checkingBalance?: DecimalNullableFilter<"Client"> | Decimal | DecimalJsLike | number | string | null
+    savingsBalance?: DecimalNullableFilter<"Client"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFilter<"Client"> | boolean
-  }, "id" | "name">
+    displayOrder?: IntNullableFilter<"Client"> | number | null
+  }, "id" | "checkingAccountNumber" | "savingsAccountNumber">
 
   export type ClientOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     birthday?: SortOrder
-    type?: SortOrder
-    account?: SortOrder
-    balance?: SortOrder
+    checkingAccountNumber?: SortOrderInput | SortOrder
+    checkingBalance?: SortOrderInput | SortOrder
+    savingsAccountNumber?: SortOrderInput | SortOrder
+    savingsBalance?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrderInput | SortOrder
     _count?: ClientCountOrderByAggregateInput
     _avg?: ClientAvgOrderByAggregateInput
     _max?: ClientMaxOrderByAggregateInput
@@ -6895,10 +6925,12 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Client"> | string
     name?: StringWithAggregatesFilter<"Client"> | string
     birthday?: StringWithAggregatesFilter<"Client"> | string
-    type?: EnumClientTypeWithAggregatesFilter<"Client"> | $Enums.ClientType
-    account?: StringWithAggregatesFilter<"Client"> | string
-    balance?: DecimalWithAggregatesFilter<"Client"> | Decimal | DecimalJsLike | number | string
+    checkingAccountNumber?: StringNullableWithAggregatesFilter<"Client"> | string | null
+    checkingBalance?: DecimalNullableWithAggregatesFilter<"Client"> | Decimal | DecimalJsLike | number | string | null
+    savingsAccountNumber?: StringNullableWithAggregatesFilter<"Client"> | string | null
+    savingsBalance?: DecimalNullableWithAggregatesFilter<"Client"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolWithAggregatesFilter<"Client"> | boolean
+    displayOrder?: IntNullableWithAggregatesFilter<"Client"> | number | null
   }
 
   export type AccountWhereInput = {
@@ -7149,70 +7181,84 @@ export namespace Prisma {
     id?: string
     name: string
     birthday: string
-    type: $Enums.ClientType
-    account: string
-    balance: Decimal | DecimalJsLike | number | string
+    checkingAccountNumber?: string | null
+    checkingBalance?: Decimal | DecimalJsLike | number | string | null
+    savingsAccountNumber?: string | null
+    savingsBalance?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
+    displayOrder?: number | null
   }
 
   export type ClientUncheckedCreateInput = {
     id?: string
     name: string
     birthday: string
-    type: $Enums.ClientType
-    account: string
-    balance: Decimal | DecimalJsLike | number | string
+    checkingAccountNumber?: string | null
+    checkingBalance?: Decimal | DecimalJsLike | number | string | null
+    savingsAccountNumber?: string | null
+    savingsBalance?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
+    displayOrder?: number | null
   }
 
   export type ClientUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     birthday?: StringFieldUpdateOperationsInput | string
-    type?: EnumClientTypeFieldUpdateOperationsInput | $Enums.ClientType
-    account?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    checkingAccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    checkingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    savingsAccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    savingsBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ClientUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     birthday?: StringFieldUpdateOperationsInput | string
-    type?: EnumClientTypeFieldUpdateOperationsInput | $Enums.ClientType
-    account?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    checkingAccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    checkingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    savingsAccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    savingsBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ClientCreateManyInput = {
     id?: string
     name: string
     birthday: string
-    type: $Enums.ClientType
-    account: string
-    balance: Decimal | DecimalJsLike | number | string
+    checkingAccountNumber?: string | null
+    checkingBalance?: Decimal | DecimalJsLike | number | string | null
+    savingsAccountNumber?: string | null
+    savingsBalance?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
+    displayOrder?: number | null
   }
 
   export type ClientUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     birthday?: StringFieldUpdateOperationsInput | string
-    type?: EnumClientTypeFieldUpdateOperationsInput | $Enums.ClientType
-    account?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    checkingAccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    checkingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    savingsAccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    savingsBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ClientUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     birthday?: StringFieldUpdateOperationsInput | string
-    type?: EnumClientTypeFieldUpdateOperationsInput | $Enums.ClientType
-    account?: StringFieldUpdateOperationsInput | string
-    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    checkingAccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    checkingBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    savingsAccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    savingsBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AccountCreateInput = {
@@ -7488,22 +7534,30 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type EnumClientTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.ClientType | EnumClientTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ClientType[] | ListEnumClientTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ClientType[] | ListEnumClientTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumClientTypeFilter<$PrismaModel> | $Enums.ClientType
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type DecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
     lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -7511,42 +7565,68 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type ClientCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     birthday?: SortOrder
-    type?: SortOrder
-    account?: SortOrder
-    balance?: SortOrder
+    checkingAccountNumber?: SortOrder
+    checkingBalance?: SortOrder
+    savingsAccountNumber?: SortOrder
+    savingsBalance?: SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type ClientAvgOrderByAggregateInput = {
-    balance?: SortOrder
+    checkingBalance?: SortOrder
+    savingsBalance?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type ClientMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     birthday?: SortOrder
-    type?: SortOrder
-    account?: SortOrder
-    balance?: SortOrder
+    checkingAccountNumber?: SortOrder
+    checkingBalance?: SortOrder
+    savingsAccountNumber?: SortOrder
+    savingsBalance?: SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type ClientMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     birthday?: SortOrder
-    type?: SortOrder
-    account?: SortOrder
-    balance?: SortOrder
+    checkingAccountNumber?: SortOrder
+    checkingBalance?: SortOrder
+    savingsAccountNumber?: SortOrder
+    savingsBalance?: SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type ClientSumOrderByAggregateInput = {
-    balance?: SortOrder
+    checkingBalance?: SortOrder
+    savingsBalance?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -7567,41 +7647,7 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type EnumClientTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ClientType | EnumClientTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ClientType[] | ListEnumClientTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ClientType[] | ListEnumClientTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumClientTypeWithAggregatesFilter<$PrismaModel> | $Enums.ClientType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumClientTypeFilter<$PrismaModel>
-    _max?: NestedEnumClientTypeFilter<$PrismaModel>
-  }
-
-  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -7613,10 +7659,37 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -7624,17 +7697,17 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type AccountProviderProviderAccountIdCompoundUniqueInput = {
@@ -7693,40 +7766,6 @@ export namespace Prisma {
 
   export type AccountSumOrderByAggregateInput = {
     expires_at?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -7871,12 +7910,12 @@ export namespace Prisma {
     set?: string
   }
 
-  export type EnumClientTypeFieldUpdateOperationsInput = {
-    set?: $Enums.ClientType
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
-  export type DecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
     increment?: Decimal | DecimalJsLike | number | string
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
@@ -7887,22 +7926,18 @@ export namespace Prisma {
     set?: boolean
   }
 
-  export type UserCreateNestedOneWithoutAccountsInput = {
-    create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type UserCreateNestedOneWithoutAccountsInput = {
+    create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
@@ -8033,27 +8068,45 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type NestedEnumClientTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.ClientType | EnumClientTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ClientType[] | ListEnumClientTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ClientType[] | ListEnumClientTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumClientTypeFilter<$PrismaModel> | $Enums.ClientType
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedDecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
     lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -8084,65 +8137,6 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type NestedEnumClientTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ClientType | EnumClientTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ClientType[] | ListEnumClientTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ClientType[] | ListEnumClientTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumClientTypeWithAggregatesFilter<$PrismaModel> | $Enums.ClientType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumClientTypeFilter<$PrismaModel>
-    _max?: NestedEnumClientTypeFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -8158,6 +8152,30 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {

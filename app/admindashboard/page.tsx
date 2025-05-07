@@ -5,8 +5,32 @@ import { Session } from "next-auth";
 // import { Client as PrismaClientType } from "../generated/prisma"; // No longer needed
 import { SearchBox } from "@/components/client-directory/SearchBox";
 import { ClientTable } from "@/components/client-directory/ClientTable";
-import { Client as FrontendClientType, SearchFilters } from "@/types/client";
+import { Client as FrontendClientType, SearchFilters } from "@/types/client"; // Uncommented and types should now match
 import { useRouter } from "next/navigation";
+// Removed Radix and Shadcn/UI imports that were added in previous steps
+// const Modal = ... // custom modal was deleted
+// Shadcn/UI Dialog components
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+// Shadcn/UI Button (and others for transfer form later)
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
 
 // Type for data coming from the API, which is JSONified Prisma data
 // Balance will be string or number, type will be string representation of enum
@@ -14,34 +38,66 @@ interface ApiClientData {
   id: string;
   name: string;
   birthday: string;
-  type: string; // e.g., "SAVINGS" or "CHECKING"
-  account: string;
-  balance: string | number;
+  checkingAccountNumber: string | null;
+  checkingBalance: string | number | null; // API might send as string or number
+  savingsAccountNumber: string | null;
+  savingsBalance: string | number | null; // API might send as string or number
   isActive?: boolean;
-  // Add other fields that are expected from the API and used in transformClientData
 }
 
 const transformClientData = (
-  apiClient: ApiClientData // Changed from PrismaClientType
+  apiClient: ApiClientData,
+  searchedAccountType?: "Checking" | "Savings"
 ): FrontendClientType => {
-  let frontendAccountType: "Checking" | "Savings";
-  if (apiClient.type === "SAVINGS") {
-    frontendAccountType = "Savings";
-  } else if (apiClient.type === "CHECKING") {
-    frontendAccountType = "Checking";
+  let accountNumber = "";
+  let accountTypeDisplay = "N/A";
+  let balanceDisplay: number | null = null;
+
+  const checkingBalanceNum =
+    apiClient.checkingBalance !== null
+      ? parseFloat(String(apiClient.checkingBalance))
+      : null;
+  const savingsBalanceNum =
+    apiClient.savingsBalance !== null
+      ? parseFloat(String(apiClient.savingsBalance))
+      : null;
+
+  if (searchedAccountType === "Savings" && apiClient.savingsAccountNumber) {
+    accountNumber = apiClient.savingsAccountNumber;
+    accountTypeDisplay = "Savings";
+    balanceDisplay = savingsBalanceNum;
+  } else if (
+    searchedAccountType === "Checking" &&
+    apiClient.checkingAccountNumber
+  ) {
+    accountNumber = apiClient.checkingAccountNumber;
+    accountTypeDisplay = "Checking";
+    balanceDisplay = checkingBalanceNum;
   } else {
-    console.warn("Unexpected account type from API data:", apiClient.type);
-    frontendAccountType = "Checking"; // Default or throw an error
+    // Fallback logic if the searched type isn't available or no type is specified
+    if (apiClient.checkingAccountNumber) {
+      accountNumber = apiClient.checkingAccountNumber;
+      accountTypeDisplay = "Checking";
+      balanceDisplay = checkingBalanceNum;
+    } else if (apiClient.savingsAccountNumber) {
+      accountNumber = apiClient.savingsAccountNumber;
+      accountTypeDisplay = "Savings";
+      balanceDisplay = savingsBalanceNum;
+    }
   }
 
   return {
     id: apiClient.id,
     name: apiClient.name,
     birthday: apiClient.birthday,
-    accountType: frontendAccountType,
-    accountNumber: apiClient.account,
-    balance: parseFloat(String(apiClient.balance)), // Robust parsing
+    checkingAccountNumber: apiClient.checkingAccountNumber,
+    checkingBalance: checkingBalanceNum,
+    savingsAccountNumber: apiClient.savingsAccountNumber,
+    savingsBalance: savingsBalanceNum,
     isActive: apiClient.isActive ?? true,
+    accountNumber: accountNumber, // Use the prioritized account number
+    accountType: accountTypeDisplay, // Use the prioritized account type for display
+    balance: balanceDisplay, // Use the prioritized balance
   };
 };
 
@@ -50,6 +106,23 @@ export default function AdminDashboardPage() {
   const [clients, setClients] = useState<FrontendClientType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
+
+  // Modal States
+  const [selectedClient, setSelectedClient] =
+    useState<FrontendClientType | null>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [isCloseConfirmModalOpen, setIsCloseConfirmModalOpen] = useState(false);
+
+  // State for Transfer Form - Re-adding this
+  const [transferAmount, setTransferAmount] = useState<string>("");
+  const [transferFromAccount, setTransferFromAccount] = useState<
+    "checking" | "savings" | ""
+  >("");
+  const [transferToAccount, setTransferToAccount] = useState<
+    "checking" | "savings" | ""
+  >("");
+  const [transferError, setTransferError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchSessionAndClients = async () => {
@@ -62,12 +135,22 @@ export default function AdminDashboardPage() {
         }
         setCurrentSession(sessionData);
 
-        const clientsRes = await fetch("/api/clients?activeOnly=true");
+        const initialAccountType: "Checking" | "Savings" = "Checking";
+        const clientsRes = await fetch(
+          `/api/clients?activeOnly=true&accountType=${initialAccountType}`
+        );
         if (!clientsRes.ok) {
           throw new Error("Failed to fetch clients");
         }
         const initialApiClients: ApiClientData[] = await clientsRes.json();
-        setClients(initialApiClients.map(transformClientData));
+        setClients(
+          initialApiClients.map((client) =>
+            transformClientData(
+              client,
+              initialAccountType as "Checking" | "Savings"
+            )
+          )
+        );
       } catch (error) {
         console.error("Error fetching initial data:", error as Error);
         if (
@@ -86,6 +169,16 @@ export default function AdminDashboardPage() {
     fetchSessionAndClients();
   }, [router]);
 
+  // useEffect for resetting transfer form - Re-adding this
+  useEffect(() => {
+    if (!isTransferModalOpen) {
+      setTransferAmount("");
+      setTransferFromAccount("");
+      setTransferToAccount("");
+      setTransferError(null);
+    }
+  }, [isTransferModalOpen]); // Only depends on isTransferModalOpen
+
   const handleSearch = async (params: SearchFilters) => {
     console.log("Search parameters:", params);
     setIsLoading(true);
@@ -93,7 +186,8 @@ export default function AdminDashboardPage() {
       const query = new URLSearchParams();
       if (params.name) query.append("name", params.name);
       if (params.birthday) query.append("birthday", params.birthday);
-      if (params.accountType) query.append("type", params.accountType);
+      // params.accountType will be 'Checking' or 'Savings' due to SearchBox changes
+      if (params.accountType) query.append("accountType", params.accountType);
       query.append("activeOnly", "true");
 
       const response = await fetch(`/api/clients?${query.toString()}`);
@@ -101,7 +195,16 @@ export default function AdminDashboardPage() {
         throw new Error("Failed to fetch clients during search");
       }
       const searchedApiClients: ApiClientData[] = await response.json();
-      setClients(searchedApiClients.map(transformClientData));
+      // Pass the searched accountType to the transformer, ensuring it's a valid literal or undefined
+      const typeToTransform =
+        params.accountType === "Checking" || params.accountType === "Savings"
+          ? params.accountType
+          : undefined;
+      setClients(
+        searchedApiClients.map((client) =>
+          transformClientData(client, typeToTransform)
+        )
+      );
     } catch (error) {
       console.error("Error searching clients:", error as Error);
     } finally {
@@ -109,61 +212,161 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const handleDetails = (accountNumber: string) => {
-    console.log("Details for account:", accountNumber);
-    const client = clients.find((c) => c.accountNumber === accountNumber);
-    if (client) {
-      router.push(`/admindashboard/clients/${client.id}`);
-    } else {
-      console.warn("Client not found for account number:", accountNumber);
-    }
-  };
-
-  const handleTransfer = (accountNumber: string) => {
-    console.log("Transfer for account:", accountNumber);
-    const client = clients.find((c) => c.accountNumber === accountNumber);
-    if (client) {
-      alert(
-        `Mock transfer initiated for account: ${accountNumber} (Client ID: ${client.id})`
-      );
-    } else {
-      console.warn("Client not found for transfer:", accountNumber);
-    }
-  };
-
-  const handleCloseAccount = async (accountNumber: string) => {
-    console.log("Close account:", accountNumber);
-    const clientToClose = clients.find(
-      (c) => c.accountNumber === accountNumber
+  const openDetailsModal = (client: FrontendClientType) => {
+    console.log("[Handler] openDetailsModal called for client:", client.id);
+    setSelectedClient(client);
+    setIsDetailsModalOpen(true);
+    console.log(
+      "[Handler] State after setting: isDetailsModalOpen=true, selectedClient set"
     );
-    if (!clientToClose) {
-      console.error("Client not found for closing:", accountNumber);
+  };
+
+  const openTransferModal = (client: FrontendClientType) => {
+    console.log("[Handler] openTransferModal called for client:", client.id);
+    setSelectedClient(client);
+    setIsTransferModalOpen(true);
+    console.log(
+      "[Handler] State after setting: isTransferModalOpen=true, selectedClient set"
+    );
+  };
+
+  const openCloseConfirmModal = (client: FrontendClientType) => {
+    console.log(
+      "[Handler] openCloseConfirmModal called for client:",
+      client.id
+    );
+    setSelectedClient(client);
+    setIsCloseConfirmModalOpen(true);
+    console.log(
+      "[Handler] State after setting: isCloseConfirmModalOpen=true, selectedClient set"
+    );
+  };
+
+  const closeAllModals = () => {
+    console.log("[Handler] closeAllModals called");
+    setIsDetailsModalOpen(false);
+    setIsTransferModalOpen(false);
+    setIsCloseConfirmModalOpen(false);
+    setSelectedClient(null);
+  };
+
+  // This function will be called from the confirmation modal
+  const confirmCloseAccount = async () => {
+    if (!selectedClient) return;
+
+    console.log("Confirm close account:", selectedClient.id);
+    try {
+      const response = await fetch(`/api/clients/${selectedClient.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to close account");
+      }
+      setClients(clients.filter((client) => client.id !== selectedClient.id));
+      toast.success(`Account for ${selectedClient.name} closed successfully.`);
+    } catch (error) {
+      console.error("Error closing account:", error as Error);
+      toast.error(`Error closing account: ${(error as Error).message}`);
+    }
+    closeAllModals(); // Close modal after action
+  };
+
+  // handleTransferSubmit function - Re-adding this
+  const handleTransferSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log(
+      "[TransferSubmit] Initial transferAmount string from state:",
+      transferAmount
+    );
+    setTransferError(null);
+    if (
+      !selectedClient ||
+      !transferFromAccount ||
+      !transferToAccount ||
+      !transferAmount
+    ) {
+      setTransferError("All fields are required for transfer.");
+      return;
+    }
+    if (transferFromAccount === transferToAccount) {
+      setTransferError("Cannot transfer to the same account type.");
+      return;
+    }
+    const amount = parseFloat(transferAmount);
+    if (isNaN(amount) || amount <= 0) {
+      setTransferError("Invalid transfer amount. Must be a positive number.");
       return;
     }
 
+    // Check for more than two decimal places on the original input string
     if (
-      confirm(
-        `Are you sure you want to close account ${accountNumber} (ID: ${clientToClose.id})?`
-      )
+      transferAmount.includes(".") &&
+      transferAmount.split(".")[1].length > 2
     ) {
-      try {
-        const response = await fetch(`/api/clients/${clientToClose.id}`, {
-          method: "PATCH",
+      setTransferError(
+        "Invalid transfer amount. Cannot have more than two decimal places."
+      );
+      return;
+    }
+
+    // New balance check
+    let fromAccountBalance: number | null = null;
+    if (transferFromAccount === "checking") {
+      fromAccountBalance = selectedClient.checkingBalance;
+    } else if (transferFromAccount === "savings") {
+      fromAccountBalance = selectedClient.savingsBalance;
+    }
+
+    if (fromAccountBalance === null || amount > fromAccountBalance) {
+      setTransferError("Insufficient funds in the selected account.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/clients/${selectedClient.id}/transfer`,
+        {
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ isActive: false }),
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to close account");
+          body: JSON.stringify({
+            amount,
+            fromAccountType: transferFromAccount,
+            toAccountType: transferToAccount,
+          }),
         }
-        setClients(clients.filter((client) => client.id !== clientToClose.id));
-        alert(`Account ${accountNumber} closed successfully.`);
-      } catch (error) {
-        console.error("Error closing account:", error as Error);
-        alert(`Error closing account: ${(error as Error).message}`);
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Transfer API call failed");
+      }
+      const updatedClientAPI = await response.json();
+      setClients((prevClients) =>
+        prevClients.map((c) =>
+          c.id === updatedClientAPI.id
+            ? transformClientData(updatedClientAPI)
+            : c
+        )
+      );
+      toast.success("Transfer successful!");
+      closeAllModals();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setTransferError(err.message);
+      } else {
+        setTransferError("An unexpected error occurred during transfer.");
       }
     }
   };
+
+  // Log state just before rendering
+  console.log(
+    "[Render] Modal states:",
+    { isDetailsModalOpen, isTransferModalOpen, isCloseConfirmModalOpen },
+    "Selected Client:",
+    selectedClient?.id || null
+  );
 
   if (!currentSession && isLoading) {
     return (
@@ -211,12 +414,257 @@ export default function AdminDashboardPage() {
           ) : clients.length > 0 && currentSession ? (
             <ClientTable
               clients={clients}
-              onDetails={handleDetails}
-              onTransfer={handleTransfer}
-              onClose={handleCloseAccount}
+              onDetails={openDetailsModal}
+              onTransfer={openTransferModal}
+              onClose={openCloseConfirmModal}
             />
           ) : null}
         </div>
+
+        {/* Details Modal using Shadcn/UI Dialog */}
+        {selectedClient && isDetailsModalOpen && (
+          <Dialog
+            open={isDetailsModalOpen}
+            onOpenChange={setIsDetailsModalOpen}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Client Details</DialogTitle>
+                <DialogDescription>
+                  Detailed information for {selectedClient.name}.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="name" className="text-right">
+                    Name
+                  </Label>
+                  <Input
+                    id="name"
+                    value={selectedClient.name}
+                    readOnly
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="birthday" className="text-right">
+                    Birthday
+                  </Label>
+                  <Input
+                    id="birthday"
+                    value={selectedClient.birthday}
+                    readOnly
+                    className="col-span-3"
+                  />
+                </div>
+                {selectedClient.checkingAccountNumber && (
+                  <>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="checkingAccount" className="text-right">
+                        Checking Acc.
+                      </Label>
+                      <Input
+                        id="checkingAccount"
+                        value={selectedClient.checkingAccountNumber}
+                        readOnly
+                        className="col-span-3"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="checkingBalance" className="text-right">
+                        Checking Bal.
+                      </Label>
+                      <Input
+                        id="checkingBalance"
+                        value={
+                          selectedClient.checkingBalance?.toFixed(2) ?? "N/A"
+                        }
+                        readOnly
+                        className="col-span-3"
+                      />
+                    </div>
+                  </>
+                )}
+                {selectedClient.savingsAccountNumber && (
+                  <>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="savingsAccount" className="text-right">
+                        Savings Acc.
+                      </Label>
+                      <Input
+                        id="savingsAccount"
+                        value={selectedClient.savingsAccountNumber}
+                        readOnly
+                        className="col-span-3"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="savingsBalance" className="text-right">
+                        Savings Bal.
+                      </Label>
+                      <Input
+                        id="savingsBalance"
+                        value={
+                          selectedClient.savingsBalance?.toFixed(2) ?? "N/A"
+                        }
+                        readOnly
+                        className="col-span-3"
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+              <DialogFooter>
+                <Button onClick={closeAllModals} variant="outline">
+                  Close
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {/* Transfer Modal using Shadcn/UI Dialog - Ensuring form is present */}
+        {selectedClient && (
+          <Dialog
+            open={isTransferModalOpen}
+            onOpenChange={(isOpen: boolean) => !isOpen && closeAllModals()}
+          >
+            <DialogContent className="sm:max-w-[525px]">
+              <DialogHeader>
+                <DialogTitle>
+                  Transfer Funds for {selectedClient.name}
+                </DialogTitle>
+                <DialogDescription>
+                  Specify transfer details below. Client ID: {selectedClient.id}
+                </DialogDescription>
+              </DialogHeader>
+              <hr className="border-t border-gray-300 my-2"></hr>
+
+              <form onSubmit={handleTransferSubmit} className="space-y-4 py-4">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="transferAmount">Amount</Label>
+                  <Input
+                    id="transferAmount"
+                    type="number"
+                    value={transferAmount}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setTransferAmount(e.target.value)
+                    }
+                    placeholder="0.00"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="transferFrom">From Account</Label>
+                  <Select
+                    value={transferFromAccount}
+                    onValueChange={(value: "checking" | "savings" | "") =>
+                      setTransferFromAccount(value)
+                    }
+                  >
+                    <SelectTrigger id="transferFrom">
+                      <SelectValue placeholder="Select account to transfer from" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {selectedClient?.checkingAccountNumber && (
+                        <SelectItem value="checking">{`Checking (${
+                          selectedClient.checkingAccountNumber
+                        }) - Bal: $${selectedClient.checkingBalance?.toFixed(
+                          2
+                        )}`}</SelectItem>
+                      )}
+                      {selectedClient?.savingsAccountNumber && (
+                        <SelectItem value="savings">{`Savings (${
+                          selectedClient.savingsAccountNumber
+                        }) - Bal: $${selectedClient.savingsBalance?.toFixed(
+                          2
+                        )}`}</SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="transferTo">To Account</Label>
+                  <Select
+                    value={transferToAccount}
+                    onValueChange={(value: "checking" | "savings" | "") =>
+                      setTransferToAccount(value)
+                    }
+                  >
+                    <SelectTrigger id="transferTo">
+                      <SelectValue placeholder="Select account to transfer to" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {selectedClient?.checkingAccountNumber &&
+                        transferFromAccount !== "checking" && (
+                          <SelectItem value="checking">{`Checking (${selectedClient.checkingAccountNumber})`}</SelectItem>
+                        )}
+                      {selectedClient?.savingsAccountNumber &&
+                        transferFromAccount !== "savings" && (
+                          <SelectItem value="savings">{`Savings (${selectedClient.savingsAccountNumber})`}</SelectItem>
+                        )}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {transferError && (
+                  <p className="text-sm text-red-500">{transferError}</p>
+                )}
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={closeAllModals}
+                    >
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button type="submit">Submit Transfer</Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {/* Close Account Confirmation Modal using Shadcn/UI Dialog */}
+        {selectedClient && (
+          <Dialog
+            open={isCloseConfirmModalOpen}
+            onOpenChange={(isOpen) => !isOpen && closeAllModals()}
+          >
+            <DialogContent className="w-[400px] sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>
+                  Confirm Close Account: {selectedClient.name}
+                </DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to close the account for{" "}
+                  {selectedClient.name}? This action will mark the client as
+                  inactive.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="pt-4">
+                <DialogClose asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={closeAllModals}
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={confirmCloseAccount}
+                  >
+                    Yes, Close Account
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </main>
     </div>
   );

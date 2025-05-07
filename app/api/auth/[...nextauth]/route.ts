@@ -1,8 +1,9 @@
-import { Auth, type AuthConfig } from "@auth/core";
-import Google from "@auth/core/providers/google";
-import GitHub from "@auth/core/providers/github";
+import NextAuth from "next-auth";
+import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "../../../generated/prisma";
+import { PrismaClient } from "../../../generated/prisma"; // Adjust path if needed
+import type { NextAuthConfig } from "next-auth";
 
 console.log(
   "[AUTH_ROUTE_MODULE] process.env.AUTH_SECRET at module load:",
@@ -19,55 +20,35 @@ console.log(
 
 const prisma = new PrismaClient();
 
-export const authOptions: AuthConfig = {
+// Define config using NextAuthConfig type from next-auth v5
+export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    // Temporarily comment out ALL providers
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID, // No need for `as string` if env vars are set
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
     GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
   ],
-  session: { strategy: "database" }, // JWT is default in v5, use database for adapter
-  basePath: "/api/auth", // Explicitly set base path
-  trustHost: true, // Explicitly trust the host
-  secret: process.env.AUTH_SECRET, // Explicitly pass the secret
-  // Optional: Add callbacks, pages, session strategy, etc.
-  // callbacks: {
-  //   async session({ session, user }) {
-  //     session.user.id = user.id;
-  //     return session;
-  //   },
-  // },
-  // pages: {
-  //   signIn: '/login',
-  // },
-  // You MUST have an AUTH_SECRET set in your .env.local
+  session: { strategy: "database" },
+  secret: process.env.AUTH_SECRET, // Make sure AUTH_SECRET env var is set
+  // trustHost: true, // Recommended to set AUTH_TRUST_HOST=true in .env instead
+  // basePath: "/api/auth", // Usually inferred
+  callbacks: {
+    // Add callbacks if needed, e.g., modifying session data
+  },
+  // pages: { signIn: '/login' }, // Optional
 };
 
-async function handler(req: Request) {
-  console.log(
-    "[Auth Handler] process.env.AUTH_SECRET in handler:",
-    process.env.AUTH_SECRET
-  );
+// Initialize NextAuth v5 and export handlers and auth helper
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth(authConfig);
 
-  try {
-    const response = await Auth(req, authOptions);
-    console.log(
-      "[Auth Handler] Auth function returned status:",
-      response.status
-    );
-    return response;
-  } catch (error) {
-    console.error("[Auth Handler] Error in Auth function:", error);
-    return new Response("Internal Server Error during authentication", {
-      status: 500,
-    });
-  }
-}
-
-export { handler as GET, handler as POST };
+// Note: handlers object contains GET and POST functions directly

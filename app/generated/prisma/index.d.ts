@@ -1316,6 +1316,7 @@ export namespace Prisma {
     type: $Enums.ClientType | null
     account: string | null
     balance: Decimal | null
+    isActive: boolean | null
   }
 
   export type ClientMaxAggregateOutputType = {
@@ -1325,6 +1326,7 @@ export namespace Prisma {
     type: $Enums.ClientType | null
     account: string | null
     balance: Decimal | null
+    isActive: boolean | null
   }
 
   export type ClientCountAggregateOutputType = {
@@ -1334,6 +1336,7 @@ export namespace Prisma {
     type: number
     account: number
     balance: number
+    isActive: number
     _all: number
   }
 
@@ -1353,6 +1356,7 @@ export namespace Prisma {
     type?: true
     account?: true
     balance?: true
+    isActive?: true
   }
 
   export type ClientMaxAggregateInputType = {
@@ -1362,6 +1366,7 @@ export namespace Prisma {
     type?: true
     account?: true
     balance?: true
+    isActive?: true
   }
 
   export type ClientCountAggregateInputType = {
@@ -1371,6 +1376,7 @@ export namespace Prisma {
     type?: true
     account?: true
     balance?: true
+    isActive?: true
     _all?: true
   }
 
@@ -1467,6 +1473,7 @@ export namespace Prisma {
     type: $Enums.ClientType
     account: string
     balance: Decimal
+    isActive: boolean
     _count: ClientCountAggregateOutputType | null
     _avg: ClientAvgAggregateOutputType | null
     _sum: ClientSumAggregateOutputType | null
@@ -1495,6 +1502,7 @@ export namespace Prisma {
     type?: boolean
     account?: boolean
     balance?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["client"]>
 
   export type ClientSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1504,6 +1512,7 @@ export namespace Prisma {
     type?: boolean
     account?: boolean
     balance?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["client"]>
 
   export type ClientSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1513,6 +1522,7 @@ export namespace Prisma {
     type?: boolean
     account?: boolean
     balance?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["client"]>
 
   export type ClientSelectScalar = {
@@ -1522,9 +1532,10 @@ export namespace Prisma {
     type?: boolean
     account?: boolean
     balance?: boolean
+    isActive?: boolean
   }
 
-  export type ClientOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "birthday" | "type" | "account" | "balance", ExtArgs["result"]["client"]>
+  export type ClientOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "birthday" | "type" | "account" | "balance" | "isActive", ExtArgs["result"]["client"]>
 
   export type $ClientPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Client"
@@ -1536,6 +1547,7 @@ export namespace Prisma {
       type: $Enums.ClientType
       account: string
       balance: Prisma.Decimal
+      isActive: boolean
     }, ExtArgs["result"]["client"]>
     composites: {}
   }
@@ -1965,6 +1977,7 @@ export namespace Prisma {
     readonly type: FieldRef<"Client", 'ClientType'>
     readonly account: FieldRef<"Client", 'String'>
     readonly balance: FieldRef<"Client", 'Decimal'>
+    readonly isActive: FieldRef<"Client", 'Boolean'>
   }
     
 
@@ -6646,7 +6659,8 @@ export namespace Prisma {
     birthday: 'birthday',
     type: 'type',
     account: 'account',
-    balance: 'balance'
+    balance: 'balance',
+    isActive: 'isActive'
   };
 
   export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
@@ -6772,6 +6786,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -6826,6 +6847,7 @@ export namespace Prisma {
     type?: EnumClientTypeFilter<"Client"> | $Enums.ClientType
     account?: StringFilter<"Client"> | string
     balance?: DecimalFilter<"Client"> | Decimal | DecimalJsLike | number | string
+    isActive?: BoolFilter<"Client"> | boolean
   }
 
   export type ClientOrderByWithRelationInput = {
@@ -6835,19 +6857,21 @@ export namespace Prisma {
     type?: SortOrder
     account?: SortOrder
     balance?: SortOrder
+    isActive?: SortOrder
   }
 
   export type ClientWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    account?: string
+    name?: string
     AND?: ClientWhereInput | ClientWhereInput[]
     OR?: ClientWhereInput[]
     NOT?: ClientWhereInput | ClientWhereInput[]
-    name?: StringFilter<"Client"> | string
     birthday?: StringFilter<"Client"> | string
     type?: EnumClientTypeFilter<"Client"> | $Enums.ClientType
+    account?: StringFilter<"Client"> | string
     balance?: DecimalFilter<"Client"> | Decimal | DecimalJsLike | number | string
-  }, "id" | "account">
+    isActive?: BoolFilter<"Client"> | boolean
+  }, "id" | "name">
 
   export type ClientOrderByWithAggregationInput = {
     id?: SortOrder
@@ -6856,6 +6880,7 @@ export namespace Prisma {
     type?: SortOrder
     account?: SortOrder
     balance?: SortOrder
+    isActive?: SortOrder
     _count?: ClientCountOrderByAggregateInput
     _avg?: ClientAvgOrderByAggregateInput
     _max?: ClientMaxOrderByAggregateInput
@@ -6873,6 +6898,7 @@ export namespace Prisma {
     type?: EnumClientTypeWithAggregatesFilter<"Client"> | $Enums.ClientType
     account?: StringWithAggregatesFilter<"Client"> | string
     balance?: DecimalWithAggregatesFilter<"Client"> | Decimal | DecimalJsLike | number | string
+    isActive?: BoolWithAggregatesFilter<"Client"> | boolean
   }
 
   export type AccountWhereInput = {
@@ -7126,6 +7152,7 @@ export namespace Prisma {
     type: $Enums.ClientType
     account: string
     balance: Decimal | DecimalJsLike | number | string
+    isActive?: boolean
   }
 
   export type ClientUncheckedCreateInput = {
@@ -7135,6 +7162,7 @@ export namespace Prisma {
     type: $Enums.ClientType
     account: string
     balance: Decimal | DecimalJsLike | number | string
+    isActive?: boolean
   }
 
   export type ClientUpdateInput = {
@@ -7144,6 +7172,7 @@ export namespace Prisma {
     type?: EnumClientTypeFieldUpdateOperationsInput | $Enums.ClientType
     account?: StringFieldUpdateOperationsInput | string
     balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ClientUncheckedUpdateInput = {
@@ -7153,6 +7182,7 @@ export namespace Prisma {
     type?: EnumClientTypeFieldUpdateOperationsInput | $Enums.ClientType
     account?: StringFieldUpdateOperationsInput | string
     balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ClientCreateManyInput = {
@@ -7162,6 +7192,7 @@ export namespace Prisma {
     type: $Enums.ClientType
     account: string
     balance: Decimal | DecimalJsLike | number | string
+    isActive?: boolean
   }
 
   export type ClientUpdateManyMutationInput = {
@@ -7171,6 +7202,7 @@ export namespace Prisma {
     type?: EnumClientTypeFieldUpdateOperationsInput | $Enums.ClientType
     account?: StringFieldUpdateOperationsInput | string
     balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ClientUncheckedUpdateManyInput = {
@@ -7180,6 +7212,7 @@ export namespace Prisma {
     type?: EnumClientTypeFieldUpdateOperationsInput | $Enums.ClientType
     account?: StringFieldUpdateOperationsInput | string
     balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type AccountCreateInput = {
@@ -7473,6 +7506,11 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type ClientCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -7480,6 +7518,7 @@ export namespace Prisma {
     type?: SortOrder
     account?: SortOrder
     balance?: SortOrder
+    isActive?: SortOrder
   }
 
   export type ClientAvgOrderByAggregateInput = {
@@ -7493,6 +7532,7 @@ export namespace Prisma {
     type?: SortOrder
     account?: SortOrder
     balance?: SortOrder
+    isActive?: SortOrder
   }
 
   export type ClientMinOrderByAggregateInput = {
@@ -7502,6 +7542,7 @@ export namespace Prisma {
     type?: SortOrder
     account?: SortOrder
     balance?: SortOrder
+    isActive?: SortOrder
   }
 
   export type ClientSumOrderByAggregateInput = {
@@ -7550,6 +7591,14 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type StringNullableFilter<$PrismaModel = never> = {
@@ -7834,6 +7883,10 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type UserCreateNestedOneWithoutAccountsInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
@@ -7998,6 +8051,11 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -8050,6 +8108,14 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {

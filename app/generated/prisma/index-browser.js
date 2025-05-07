@@ -126,7 +126,8 @@ exports.Prisma.ClientScalarFieldEnum = {
   birthday: 'birthday',
   type: 'type',
   account: 'account',
-  balance: 'balance'
+  balance: 'balance',
+  isActive: 'isActive'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {

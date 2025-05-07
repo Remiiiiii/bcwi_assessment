@@ -21,11 +21,12 @@ enum ClientType {
 
 model Client {
   id        String     @id @default(uuid())
-  name      String
+  name      String     @unique
   birthday  String     // Format: "MM / DD / YYYY"
   type      ClientType // "Savings" | "Checking"
-  account   String     @unique // 13-digit number
+  account   String     // Removed @unique
   balance   Decimal    @db.Decimal(10, 2) // Format: "$X,XXX.XX"
+  isActive  Boolean    @default(true) // Add this field for soft delete
 }
 
 model Account {

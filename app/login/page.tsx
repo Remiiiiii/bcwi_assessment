@@ -6,6 +6,26 @@ import React from "react";
 export default function LoginPage() {
   const { data: session, status } = useSession();
 
+  const handleSignOut = () => {
+    console.log(
+      "Calling signOut({ redirect: false }) and then manually redirecting..."
+    );
+    signOut({ redirect: false })
+      .then(() => {
+        console.log(
+          "signOut({ redirect: false }) promise resolved (or was not awaited). Redirecting now."
+        );
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        console.error("Error from signOut promise (if any):", error);
+        console.log(
+          "Attempting redirect to '/' despite potential signOut promise error."
+        );
+        window.location.href = "/";
+      });
+  };
+
   if (status === "loading") {
     return <p>Loading...</p>;
   }
@@ -28,7 +48,7 @@ export default function LoginPage() {
           />
         )}
         <button
-          onClick={() => signOut()}
+          onClick={handleSignOut}
           style={{
             padding: "10px 15px",
             backgroundColor: "#f44336",

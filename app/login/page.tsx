@@ -1,39 +1,88 @@
+"use client";
+
+import { useSession, signIn, signOut } from "next-auth/react";
 import React from "react";
 
-const LoginPage: React.FC = () => {
+export default function LoginPage() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
+
+  if (session) {
+    return (
+      <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+        <h1>Welcome, {session.user?.name || session.user?.email}</h1>
+        <p>You are signed in!</p>
+        {session.user?.image && (
+          <img
+            src={session.user.image}
+            alt="User avatar"
+            style={{
+              borderRadius: "50%",
+              width: "80px",
+              height: "80px",
+              margin: "10px 0",
+            }}
+          />
+        )}
+        <button
+          onClick={() => signOut()}
+          style={{
+            padding: "10px 15px",
+            backgroundColor: "#f44336",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Sign out
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Biocollections Worldwide Inc
-        </h1>
-
-        <div className="space-y-4">
-          <button
-            // onClick={() => signIn('google')} // Placeholder for NextAuth.js
-            className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            {/* Replace with Google SVG icon */}
-            <span className="mr-2">G</span>
-            Sign in with Google
-          </button>
-
-          <button
-            // onClick={() => signIn('github')} // Placeholder for NextAuth.js
-            className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700"
-          >
-            {/* Replace with GitHub SVG icon */}
-            <span className="mr-2">GH</span>
-            Sign in with GitHub
-          </button>
-        </div>
-
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Please sign in to continue.
-        </p>
+    <div
+      style={{
+        padding: "20px",
+        fontFamily: "Arial, sans-serif",
+        textAlign: "center",
+      }}
+    >
+      <h1>Sign In</h1>
+      <p>You are not signed in.</p>
+      <div style={{ marginTop: "20px" }}>
+        <button
+          onClick={() => signIn("google")}
+          style={{
+            padding: "10px 15px",
+            backgroundColor: "#4285F4",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            marginRight: "10px",
+          }}
+        >
+          Sign in with Google
+        </button>
+        <button
+          onClick={() => signIn("github")}
+          style={{
+            padding: "10px 15px",
+            backgroundColor: "#333",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Sign in with GitHub
+        </button>
       </div>
     </div>
   );
-};
-
-export default LoginPage;
+}

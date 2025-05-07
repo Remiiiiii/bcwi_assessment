@@ -388,7 +388,7 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-700">
+          <h1 className="text-2xl font-semibold text-gray-700 ml-5">
             Admin Client Dashboard
           </h1>
           <button
@@ -396,7 +396,7 @@ export default function AdminDashboardPage() {
               await fetch("/api/auth/signout", { method: "POST" });
               router.push("/login");
             }}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            className="mr-[15px] px-4 py-2 bg-[#650000] text-white rounded hover:bg-red-600"
           >
             Logout
           </button>

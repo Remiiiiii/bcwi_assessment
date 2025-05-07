@@ -26,14 +26,14 @@ export function SearchBox({ onSearch }: SearchBoxProps) {
   };
 
   return (
-    <div className="bg-card text-card-foreground border rounded-lg shadow-md p-6 md:p-8 mb-8 max-w-[1198px] mx-auto">
+    <div className="bg-card text-card-foreground border rounded-lg shadow-md p-6 md:p-8 mb-8 max-w-[1278px] mx-auto">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
         <div>
           <h2 className="text-[20px] font-bold tracking-[-0.02em] text-[#650000] mb-6 h-[30px] leading-[30px]">
             Client Directory
           </h2>
           <div className="flex flex-row gap-x-4 items-end">
-            <div className="relative flex-grow min-w-[200px]">
+            <div className="relative flex-grow min-w-[500px]">
               <span className="absolute -top-2 left-3 text-[10px] font-medium text-[#650000] bg-card px-1">
                 Name
               </span>

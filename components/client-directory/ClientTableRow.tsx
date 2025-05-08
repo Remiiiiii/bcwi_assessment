@@ -8,8 +8,8 @@ export function ClientTableRow({
   onClose,
 }: ClientTableRowProps) {
   return (
-    <tr className={isEven ? "bg-neutral-100" : ""}>
-      <td className="py-3 px-4 text-[rgba(119,119,119,1)] text-base font-normal">
+    <tr className={!isEven ? "bg-neutral-100" : ""}>
+      <td className="py-3 pl-10 pr-4 text-[rgba(119,119,119,1)] text-base font-normal">
         {client.name}
       </td>
       <td className="py-3 px-4 text-center text-[rgba(119,119,119,1)] text-base font-normal">
@@ -22,26 +22,30 @@ export function ClientTableRow({
         {client.accountNumber}
       </td>
       <td className="py-3 px-4 text-[rgba(119,119,119,1)] text-base font-bold">
-        ${client.balance.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+        {client.balance !== null
+          ? `$${client.balance.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+            })}`
+          : "N/A"}
       </td>
-      <td className="py-3 px-4 text-right text-[rgba(101,0,0,1)] text-base font-normal">
+      <td className="py-3 pr-10 pl-4 text-center text-[rgba(101,0,0,1)] text-base font-normal">
         <button
-          onClick={() => onDetails(client.accountNumber)}
-          className="hover:underline"
+          onClick={() => onDetails(client)}
+          className="hover:underline mr-2"
         >
           Details
         </button>
-        {" l "}
+        |
         <button
-          onClick={() => onTransfer(client.accountNumber)}
-          className="hover:underline"
+          onClick={() => onTransfer(client)}
+          className="hover:underline mx-2"
         >
           Transfer
         </button>
-        {" l "}
+        |
         <button
-          onClick={() => onClose(client.accountNumber)}
-          className="hover:underline"
+          onClick={() => onClose(client)}
+          className="hover:underline ml-2"
         >
           Close Account
         </button>

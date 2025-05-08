@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -20,13 +20,17 @@ enum ClientType {
 }
 
 model Client {
-  id        String     @id @default(uuid())
-  name      String     @unique
-  birthday  String     // Format: "MM / DD / YYYY"
-  type      ClientType // "Savings" | "Checking"
-  account   String     // Removed @unique
-  balance   Decimal    @db.Decimal(10, 2) // Format: "$X,XXX.XX"
-  isActive  Boolean    @default(true) // Add this field for soft delete
+  id                    String   @id @default(cuid())
+  name                  String
+  birthday              String
+  checkingAccountNumber String?  @unique
+  checkingBalance       Decimal? @db.Decimal(10, 2)
+  savingsAccountNumber  String?  @unique
+  savingsBalance        Decimal? @db.Decimal(10, 2)
+  isActive              Boolean  @default(true)
+  displayOrder          Int?     // Added displayOrder field
+
+  @@map("clients")
 }
 
 model Account {

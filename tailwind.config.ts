@@ -1,3 +1,5 @@
+// import fontFamily from "tailwindcss/defaultTheme"; // No longer needed
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -6,7 +8,12 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)", "sans-serif"],
+        poppins: ["var(--font-poppins)", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };

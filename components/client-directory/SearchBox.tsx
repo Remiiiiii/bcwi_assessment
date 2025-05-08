@@ -1,5 +1,15 @@
 import { useState } from "react";
+import Image from "next/image";
 import { SearchBoxProps } from "@/types/client";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function SearchBox({ onSearch }: SearchBoxProps) {
   const [name, setName] = useState("");
@@ -7,79 +17,162 @@ export function SearchBox({ onSearch }: SearchBoxProps) {
   const [accountType, setAccountType] = useState("Checking");
 
   const handleSearch = () => {
-    onSearch({ name, birthday, accountType });
+    const normalizedBirthday = birthday.replace(/\s/g, "");
+    onSearch({
+      name,
+      birthday: normalizedBirthday,
+      accountType: accountType,
+    });
   };
 
   return (
-    <div className="bg-white shadow-[0px_5px_15px_rgba(0,0,0,0.2)] border flex w-full max-w-[1278px] flex-col overflow-hidden pt-[35px] pb-[60px] px-10 rounded-[10px] border-[rgba(224,214,192,1)] border-solid max-md:max-w-full max-md:px-5">
-      <div className="z-10 flex w-[696px] max-w-full items-stretch gap-2.5 flex-wrap">
-        <div className="flex flex-col items-stretch text-[rgba(101,0,0,1)] grow shrink-0 basis-0 w-fit max-md:max-w-full">
-          <h2 className="text-xl font-bold tracking-[-0.4px]">
-            Client Directory
-          </h2>
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="self-stretch w-[107px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] bg-white h-[50px] text-[10px] font-normal tracking-[-0.2px] mt-[18px] rounded-[10px] border-2 border-[#650000] px-3"
-          />
-        </div>
-        <div className="flex items-start font-normal mt-[42px] max-md:mt-10">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="MM / DD / YYYY"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
-              className="w-[151px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] bg-white min-h-[50px] text-base text-[rgba(224,224,224,1)] tracking-[-0.32px] mt-1.5 rounded-[10px] border-2 border-solid border-[#D9D9D9] px-3"
+    <div className="bg-card text-card-foreground border rounded-lg shadow-md p-4 md:p-8 mb-8 max-w-[1198px] mx-auto">
+      <div className="flex justify-between items-center mb-4 md:hidden">
+        <h2 className="text-lg poppins-medium tracking-[-0.02em] text-[#650000]">
+          Client Directory
+        </h2>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Notifications"
+            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground w-9 h-9 p-0 flex items-center justify-center"
+          >
+            <Image
+              src="/images/icons/fa-bell.png"
+              alt="Notifications"
+              width={24}
+              height={24}
+              className="object-contain"
             />
-            <label className="text-[rgba(69,69,69,1)] text-[10px] tracking-[-0.2px] absolute -top-5 left-2">
-              Birthday
-            </label>
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Settings"
+            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground w-9 h-9 p-0 flex items-center justify-center"
+          >
+            <Image
+              src="/images/icons/fa-gear.png"
+              alt="Settings"
+              width={24}
+              height={24}
+              className="object-contain"
+            />
+          </Button>
+          <div className="h-9 w-9 rounded-full relative overflow-hidden">
+            <Image
+              src="/images/icons/user-profile.png"
+              alt="User profile"
+              layout="fill"
+              objectFit="cover"
+            />
           </div>
         </div>
       </div>
-      <div className="relative">
-        <select
-          value={accountType}
-          onChange={(e) => setAccountType(e.target.value)}
-          className="self-stretch w-[143px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] bg-white z-10 mt-[-29px] min-h-[50px] text-base text-[rgba(69,69,69,1)] font-normal tracking-[-0.32px] mr-[319px] rounded-[10px] border-2 border-solid border-[#D9D9D9] px-3 max-md:mr-2.5"
-        >
-          <option value="Checking">Checking</option>
-          <option value="Savings">Savings</option>
-        </select>
-        <label className="text-[rgba(69,69,69,1)] text-[10px] font-normal tracking-[-0.2px] absolute -top-5 left-2">
-          Account Type
-        </label>
-      </div>
-      <div className="flex mt-[-50px] w-[309px] max-w-full items-stretch gap-5 justify-between">
-        <button
-          onClick={handleSearch}
-          className="justify-center items-center border shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] bg-[#650000] flex min-h-[50px] w-[51px] h-[51px] rounded-[10px] border-solid border-black"
-        >
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c9b9032db9fadd09a87f14baa1ba06cfbce4f696?placeholderIfAbsent=true"
-            className="aspect-[1] object-contain w-[23px] self-stretch my-auto"
-            alt="Search"
-          />
-        </button>
-        <div className="flex items-center gap-5">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/5375e854dfbe773aeb3ac7800f4316e4d36e47e8?placeholderIfAbsent=true"
-            className="aspect-[1] object-contain w-7 self-stretch shrink-0 my-auto"
-            alt="Icon 1"
-          />
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/5d8305baf8bda08787a06ebed9355623212a1aae?placeholderIfAbsent=true"
-            className="aspect-[1] object-contain w-7 self-stretch shrink-0 my-auto"
-            alt="Icon 2"
-          />
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/6e90055fea9bb0d4454f15560424539a9c7bc40f?placeholderIfAbsent=true"
-            className="aspect-[1] object-contain w-[50px] self-stretch shrink-0 rounded-[100px]"
-            alt="Profile"
-          />
+
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6">
+        <div>
+          <h2 className="hidden md:block text-lg md:text-[20px] poppins-medium tracking-[-0.02em] text-[#650000] mb-4 md:mb-6 h-auto md:h-[30px] md:leading-[30px]">
+            Client Directory
+          </h2>
+          <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-end">
+            <div className="relative w-full md:flex-grow md:min-w-[500px]">
+              <span className="absolute -top-2 left-3 text-[10px] font-medium text-[#650000] bg-card px-1">
+                Name
+              </span>
+              <Input
+                id="search-name"
+                type="text"
+                aria-label="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="h-[50px] rounded-[10px] border-2 border-[#650000] focus:ring-2 focus:ring-[#650000] focus:ring-offset-2 w-full text-sm px-3 pt-2 placeholder:text-[#E0E0E0]"
+              />
+            </div>
+            <div className="relative w-full md:basis-[250px] md:shrink">
+              <span className="absolute -top-2 left-3 text-[10px] font-medium text-[#454545] bg-card px-1">
+                Birthday
+              </span>
+              <Input
+                id="search-birthday"
+                type="text"
+                placeholder="MM/DD/YYYY"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+                className="h-[50px] rounded-[10px] border-2 border-[#D9D9D9] focus:ring-2 focus:ring-[#650000] focus:ring-offset-2 w-full text-sm px-3 pt-2 placeholder:text-[#E0E0E0]"
+              />
+            </div>
+            <div className="relative w-full md:basis-[250px] md:shrink">
+              <span className="absolute -top-2 left-3 text-[10px] font-medium text-[#454545] bg-card px-1 z-10">
+                Account Type
+              </span>
+              <Select value={accountType} onValueChange={setAccountType}>
+                <SelectTrigger
+                  id="search-account-type"
+                  aria-label="Account Type"
+                  className="h-[50px] rounded-[10px] border-2 border-[#D9D9D9] focus:ring-2 focus:ring-[#650000] focus:ring-offset-2 w-full text-sm px-3 pt-2 pb-2 placeholder:text-[#E0E0E0] flex items-center"
+                >
+                  <SelectValue placeholder="Select Account Type" />
+                </SelectTrigger>
+                <SelectContent className="rounded-[10px]">
+                  <SelectItem value="Checking">Checking</SelectItem>
+                  <SelectItem value="Savings">Savings</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button
+              onClick={handleSearch}
+              aria-label="Search"
+              className="bg-[#650000] hover:bg-[#500000] text-white w-full md:w-[52px] h-[50px] rounded-[10px] flex items-center justify-center p-0 md:shrink-0 mt-4 md:mt-0"
+            >
+              <Image
+                src="/images/icons/fa-magnifying-glass.png"
+                alt="Search"
+                width={24}
+                height={24}
+                className="object-contain"
+              />
+            </Button>
+          </div>
+        </div>
+        <div className="hidden md:flex items-center self-end md:self-start gap-2 mt-4 md:mt-0 md:pt-[calc(30px+1.5rem)] translate-y-[8px]">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Notifications"
+            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground w-9 h-9 p-0 flex items-center justify-center"
+          >
+            <Image
+              src="/images/icons/fa-bell.png"
+              alt="Notifications"
+              width={24}
+              height={24}
+              className="object-contain"
+            />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Settings"
+            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground w-9 h-9 p-0 flex items-center justify-center"
+          >
+            <Image
+              src="/images/icons/fa-gear.png"
+              alt="Settings"
+              width={24}
+              height={24}
+              className="object-contain"
+            />
+          </Button>
+          <div className="h-9 w-9 rounded-full relative overflow-hidden">
+            <Image
+              src="/images/icons/user-profile.png"
+              alt="User profile"
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
         </div>
       </div>
     </div>

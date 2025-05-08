@@ -2,30 +2,14 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "../../../generated/prisma"; // Adjust path if needed
+import prisma from "@/lib/prisma";
 import type { NextAuthConfig } from "next-auth";
 
-console.log(
-  "[AUTH_ROUTE_MODULE] process.env.AUTH_SECRET at module load:",
-  process.env.AUTH_SECRET
-);
-console.log(
-  "[AUTH_ROUTE_MODULE] process.env.AUTH_URL at module load:",
-  process.env.AUTH_URL
-);
-console.log(
-  "[AUTH_ROUTE_MODULE] process.env.AUTH_TRUST_HOST at module load:",
-  process.env.AUTH_TRUST_HOST
-);
-
-const prisma = new PrismaClient();
-
-// Define config using NextAuthConfig type from next-auth v5
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID, // No need for `as string` if env vars are set
+      clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
     GitHub({
@@ -34,21 +18,46 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
   session: { strategy: "database" },
-  secret: process.env.AUTH_SECRET, // Make sure AUTH_SECRET env var is set
-  // trustHost: true, // Recommended to set AUTH_TRUST_HOST=true in .env instead
-  // basePath: "/api/auth", // Usually inferred
+  secret: process.env.AUTH_SECRET,
   callbacks: {
-    // Add callbacks if needed, e.g., modifying session data
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isOnRoot = nextUrl.pathname === "/";
+      const isOnAdminDashboard = nextUrl.pathname.startsWith("/admindashboard");
+      const isOnLoginPage = nextUrl.pathname.startsWith("/login");
+
+      if (isOnAdminDashboard) {
+        if (isLoggedIn) return true;
+        return false;
+      }
+
+      if (isOnRoot) {
+        if (isLoggedIn) {
+          return Response.redirect(new URL("/admindashboard", nextUrl));
+        }
+        return Response.redirect(new URL("/login", nextUrl));
+      }
+
+      if (isOnLoginPage) {
+        if (isLoggedIn) {
+          return Response.redirect(new URL("/admindashboard", nextUrl));
+        }
+        return true;
+      }
+      return true;
+    },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl + "/admindashboard";
+    },
   },
-  // pages: { signIn: '/login' }, // Optional
+  pages: { signIn: "/login" },
 };
 
-// Initialize NextAuth v5 and export handlers and auth helper
 export const {
   handlers: { GET, POST },
   auth,
   signIn,
   signOut,
 } = NextAuth(authConfig);
-
-// Note: handlers object contains GET and POST functions directly

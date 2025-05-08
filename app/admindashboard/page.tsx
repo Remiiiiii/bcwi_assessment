@@ -387,9 +387,7 @@ export default function AdminDashboardPage() {
           {isLoading && clients.length === 0 && currentSession ? (
             <p className="text-center text-gray-500">Loading clients...</p>
           ) : !isLoading && clients.length === 0 && currentSession ? (
-            <p className="text-center text-gray-500">
-              No clients found. Try a different search or add new clients.
-            </p>
+            <p className="text-center text-gray-500">No clients found</p>
           ) : clients.length > 0 && currentSession ? (
             <ClientTable
               clients={clients}

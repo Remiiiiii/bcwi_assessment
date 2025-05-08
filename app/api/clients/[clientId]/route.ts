@@ -1,18 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { Prisma } from "@/generated/prisma";
 import { auth } from "../../auth/[...nextauth]/route";
-
-// Define explicit type for route context parameters
-interface RouteContext {
-  params: {
-    clientId: string;
-  };
-}
 
 export async function GET(
   request: NextRequest,
-  context: RouteContext // Use the defined interface
+  context: { params: { clientId: string } }
 ) {
   const session = await auth();
   if (!session || !session.user) {
@@ -36,7 +28,7 @@ export async function GET(
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
     return NextResponse.json(client, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching client ${clientId}:`, error);
     return NextResponse.json(
       { error: "An error occurred while fetching the client." },
@@ -47,7 +39,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: RouteContext // Use the defined interface
+  context: { params: { clientId: string } }
 ) {
   const session = await auth();
   if (!session || !session.user) {
@@ -72,7 +64,7 @@ export async function PUT(
       isActive,
     } = body;
 
-    const updateData: Prisma.ClientUpdateInput = {};
+    const updateData: any = {};
     if (name !== undefined) updateData.name = name;
     if (birthday !== undefined) updateData.birthday = birthday;
     if (checkingAccountNumber !== undefined)
@@ -106,18 +98,21 @@ export async function PUT(
     });
 
     return NextResponse.json(updatedClient, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error updating client ${clientId}:`, error);
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        return NextResponse.json(
-          {
-            error: "A client with this detail already exists.",
-            fields: error.meta?.target,
-          },
-          { status: 409 }
-        );
-      }
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        {
+          error: "A client with this detail already exists.",
+          fields: (error as any).meta?.target,
+        },
+        { status: 409 }
+      );
     }
     if (error instanceof SyntaxError) {
       return NextResponse.json(
@@ -134,7 +129,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: RouteContext // Use the defined interface
+  context: { params: { clientId: string } }
 ) {
   const session = await auth();
   if (!session || !session.user) {
@@ -171,10 +166,12 @@ export async function DELETE(
       { message: "Client deactivated successfully", client: updatedClient },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error deactivating client ${clientId}:`, error);
     if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
       error.code === "P2025"
     ) {
       return NextResponse.json(

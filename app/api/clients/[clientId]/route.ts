@@ -1,11 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
-import prisma from "@/lib/prisma";
-import { auth } from "../../auth/[...nextauth]/route";
+// import prisma from "@/lib/prisma"; // Temporarily unused
+// import { Prisma } from "@prisma/client"; // Temporarily unused
+import { auth } from "../../auth/[...nextauth]/route"; // Keep auth for signature check if needed, or remove if isolated test
 
 export async function GET(
   request: NextRequest,
   context: { params: { clientId: string } }
 ) {
+  // Temporarily comment out entire implementation
+  /*
   const session = await auth();
   if (!session || !session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -35,12 +38,16 @@ export async function GET(
       { status: 500 }
     );
   }
+  */
+  return NextResponse.json({ message: "GET OK (stubbed)" }); // Minimal valid return
 }
 
 export async function PUT(
   request: NextRequest,
   context: { params: { clientId: string } }
 ) {
+  // Temporarily comment out entire implementation
+  /*
   const session = await auth();
   if (!session || !session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -53,7 +60,7 @@ export async function PUT(
       { status: 400 }
     );
   }
-
+  
   try {
     const body = await request.json();
     const {
@@ -64,7 +71,7 @@ export async function PUT(
       isActive,
     } = body;
 
-    const updateData: any = {};
+    const updateData: any = {}; 
     if (name !== undefined) updateData.name = name;
     if (birthday !== undefined) updateData.birthday = birthday;
     if (checkingAccountNumber !== undefined)
@@ -83,7 +90,7 @@ export async function PUT(
 
     const existingClient = await prisma.client.findUnique({
       where: { id: clientId },
-      select: { id: true },
+      select: { id: true }, 
     });
     if (!existingClient) {
       return NextResponse.json(
@@ -98,21 +105,16 @@ export async function PUT(
     });
 
     return NextResponse.json(updatedClient, { status: 200 });
-  } catch (error: any) {
+  } catch (error: any) { 
     console.error(`Error updating client ${clientId}:`, error);
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2002"
-    ) {
-      return NextResponse.json(
-        {
-          error: "A client with this detail already exists.",
-          fields: (error as any).meta?.target,
-        },
-        { status: 409 }
-      );
+    if (error && typeof error === 'object' && 'code' in error && error.code === "P2002") {
+        return NextResponse.json(
+          {
+            error: "A client with this detail already exists.",
+            fields: (error as any).meta?.target, 
+          },
+          { status: 409 } 
+        );
     }
     if (error instanceof SyntaxError) {
       return NextResponse.json(
@@ -125,12 +127,16 @@ export async function PUT(
       { status: 500 }
     );
   }
+  */
+  return NextResponse.json({ message: "PUT OK (stubbed)" }); // Minimal valid return
 }
 
 export async function DELETE(
   request: NextRequest,
   context: { params: { clientId: string } }
 ) {
+  // Temporarily comment out entire implementation
+  /*
   const session = await auth();
   if (!session || !session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -151,10 +157,7 @@ export async function DELETE(
     });
 
     if (!existingClient) {
-      return NextResponse.json(
-        { error: "Client not found for deactivation" },
-        { status: 404 }
-      );
+       return NextResponse.json({ error: "Client not found for deactivation" }, { status: 404 });
     }
 
     const updatedClient = await prisma.client.update({
@@ -166,22 +169,16 @@ export async function DELETE(
       { message: "Client deactivated successfully", client: updatedClient },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: any) { 
     console.error(`Error deactivating client ${clientId}:`, error);
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2025"
-    ) {
-      return NextResponse.json(
-        { error: "Client not found during update operation" },
-        { status: 404 }
-      );
+    if (error && typeof error === 'object' && 'code' in error && error.code === "P2025") {
+         return NextResponse.json({ error: "Client not found during update operation" }, { status: 404 });
     }
     return NextResponse.json(
       { error: "An error occurred while deactivating the client." },
       { status: 500 }
     );
   }
+  */
+  return NextResponse.json({ message: "DELETE OK (stubbed)" }); // Minimal valid return
 }

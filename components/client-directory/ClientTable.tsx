@@ -8,7 +8,7 @@ export function ClientTable({
   onClose,
 }: ClientTableProps) {
   return (
-    <div className="bg-white shadow-[0px_5px_15px_rgba(0,0,0,0.2)] border w-full max-w-[1198px] mx-auto overflow-hidden mt-[35px] pt-px pb-[5px] rounded-[10px] border-[rgba(224,214,192,1)] border-solid max-md:max-w-full">
+    <div className="bg-white shadow-[0px_5px_15px_rgba(0,0,0,0.2)] border w-full max-w-[1198px] mx-auto overflow-x-auto mt-[35px] pt-px pb-[5px] rounded-[10px] border-[rgba(224,214,192,1)] border-solid max-md:max-w-full">
       <table className="w-full">
         <thead>
           <tr className="bg-[rgba(101,0,0,1)] text-white poppins-thin text-base whitespace-nowrap tracking-[-0.32px]">

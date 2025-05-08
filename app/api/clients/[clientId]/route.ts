@@ -5,14 +5,14 @@ import { auth } from "../../auth/[...nextauth]/route";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { clientId: string } }
+  context: { params: { clientId: string } }
 ) {
   const session = await auth();
   if (!session || !session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { clientId } = params;
+  const clientId = context.params.clientId;
   if (!clientId) {
     return NextResponse.json(
       { error: "Client ID is required" },
@@ -40,14 +40,14 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { clientId: string } }
+  context: { params: { clientId: string } }
 ) {
   const session = await auth();
   if (!session || !session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { clientId } = params;
+  const clientId = context.params.clientId;
   if (!clientId) {
     return NextResponse.json(
       { error: "Client ID is required" },
@@ -127,14 +127,14 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { clientId: string } }
+  context: { params: { clientId: string } }
 ) {
   const session = await auth();
   if (!session || !session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { clientId } = params;
+  const clientId = context.params.clientId;
   if (!clientId) {
     return NextResponse.json(
       { error: "Client ID is required" },
@@ -143,6 +143,18 @@ export async function DELETE(
   }
 
   try {
+    const existingClient = await prisma.client.findUnique({
+      where: { id: clientId },
+      select: { id: true },
+    });
+
+    if (!existingClient) {
+      return NextResponse.json(
+        { error: "Client not found for deactivation" },
+        { status: 404 }
+      );
+    }
+
     const updatedClient = await prisma.client.update({
       where: { id: clientId },
       data: { isActive: false },
@@ -154,13 +166,14 @@ export async function DELETE(
     );
   } catch (error) {
     console.error(`Error deactivating client ${clientId}:`, error);
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return NextResponse.json(
-          { error: "Client not found for deactivation" },
-          { status: 404 }
-        );
-      }
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return NextResponse.json(
+        { error: "Client not found during update operation" },
+        { status: 404 }
+      );
     }
     return NextResponse.json(
       { error: "An error occurred while deactivating the client." },

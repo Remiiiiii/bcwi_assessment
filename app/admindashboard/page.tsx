@@ -31,75 +31,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-
-// Type for data coming from the API, which is JSONified Prisma data
-// Balance will be string or number, type will be string representation of enum
-interface ApiClientData {
-  id: string;
-  name: string;
-  birthday: string;
-  checkingAccountNumber: string | null;
-  checkingBalance: string | number | null; // API might send as string or number
-  savingsAccountNumber: string | null;
-  savingsBalance: string | number | null; // API might send as string or number
-  isActive?: boolean;
-}
-
-const transformClientData = (
-  apiClient: ApiClientData,
-  searchedAccountType?: "Checking" | "Savings"
-): FrontendClientType => {
-  let accountNumber = "";
-  let accountTypeDisplay = "N/A";
-  let balanceDisplay: number | null = null;
-
-  const checkingBalanceNum =
-    apiClient.checkingBalance !== null
-      ? parseFloat(String(apiClient.checkingBalance))
-      : null;
-  const savingsBalanceNum =
-    apiClient.savingsBalance !== null
-      ? parseFloat(String(apiClient.savingsBalance))
-      : null;
-
-  if (searchedAccountType === "Savings" && apiClient.savingsAccountNumber) {
-    accountNumber = apiClient.savingsAccountNumber;
-    accountTypeDisplay = "Savings";
-    balanceDisplay = savingsBalanceNum;
-  } else if (
-    searchedAccountType === "Checking" &&
-    apiClient.checkingAccountNumber
-  ) {
-    accountNumber = apiClient.checkingAccountNumber;
-    accountTypeDisplay = "Checking";
-    balanceDisplay = checkingBalanceNum;
-  } else {
-    // Fallback logic if the searched type isn't available or no type is specified
-    if (apiClient.checkingAccountNumber) {
-      accountNumber = apiClient.checkingAccountNumber;
-      accountTypeDisplay = "Checking";
-      balanceDisplay = checkingBalanceNum;
-    } else if (apiClient.savingsAccountNumber) {
-      accountNumber = apiClient.savingsAccountNumber;
-      accountTypeDisplay = "Savings";
-      balanceDisplay = savingsBalanceNum;
-    }
-  }
-
-  return {
-    id: apiClient.id,
-    name: apiClient.name,
-    birthday: apiClient.birthday,
-    checkingAccountNumber: apiClient.checkingAccountNumber,
-    checkingBalance: checkingBalanceNum,
-    savingsAccountNumber: apiClient.savingsAccountNumber,
-    savingsBalance: savingsBalanceNum,
-    isActive: apiClient.isActive ?? true,
-    accountNumber: accountNumber, // Use the prioritized account number
-    accountType: accountTypeDisplay, // Use the prioritized account type for display
-    balance: balanceDisplay, // Use the prioritized balance
-  };
-};
+import {
+  ApiClientData,
+  transformClientData,
+} from "@/lib/clientDataTransformer"; // Added import
+import { signOut } from "next-auth/react"; // Import signOut from next-auth/react
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -125,48 +61,75 @@ export default function AdminDashboardPage() {
   const [transferError, setTransferError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSessionAndClients = async () => {
-      try {
-        const res = await fetch("/api/auth/session");
-        const sessionData = await res.json();
-        if (Object.keys(sessionData).length === 0) {
-          router.push("/login");
-          return;
-        }
-        setCurrentSession(sessionData);
+    let isMounted = true; // Flag to prevent state updates if component unmounts
 
+    const fetchSessionAndClients = async () => {
+      if (!isMounted) return;
+      setIsLoading(true);
+
+      try {
+        // 1. Fetch session
+        const sessionRes = await fetch("/api/auth/session");
+        if (!isMounted) return;
+        const sessionData = await sessionRes.json();
+        if (!isMounted) return;
+
+        if (Object.keys(sessionData).length === 0) {
+          // No session, redirect to login
+          if (isMounted) router.push("/login");
+          return; // finally will set isLoading to false
+        }
+
+        // Session exists
+        if (isMounted) setCurrentSession(sessionData);
+
+        // 2. Fetch initial clients (only if session was successful)
         const initialAccountType: "Checking" | "Savings" = "Checking";
         const clientsRes = await fetch(
           `/api/clients?activeOnly=true&accountType=${initialAccountType}`
         );
+        if (!isMounted) return;
+
         if (!clientsRes.ok) {
-          throw new Error("Failed to fetch clients");
+          // Failed to fetch clients, but session was okay. Show error, don't redirect.
+          console.error("Failed to fetch clients:", await clientsRes.text());
+          if (isMounted) {
+            toast.error("Error: Could not load client data. Please refresh.");
+            setClients([]); // Show an empty state or error message in UI
+          }
+        } else {
+          const initialApiClients: ApiClientData[] = await clientsRes.json();
+          if (isMounted) {
+            setClients(
+              initialApiClients.map((client) =>
+                transformClientData(client, initialAccountType)
+              )
+            );
+          }
         }
-        const initialApiClients: ApiClientData[] = await clientsRes.json();
-        setClients(
-          initialApiClients.map((client) =>
-            transformClientData(
-              client,
-              initialAccountType as "Checking" | "Savings"
-            )
-          )
-        );
       } catch (error) {
-        console.error("Error fetching initial data:", error as Error);
-        if (
-          (error as Error).message.includes("fetch clients") || // More general check
-          confirm(
-            "Failed to load client data. You will be redirected to login."
-          )
-        ) {
+        // Catch any other errors (e.g., network issues with fetch itself)
+        if (isMounted) {
+          console.error(
+            "Critical error during initial data load:",
+            error as Error
+          );
+          toast.error("An unexpected error occurred. Redirecting to login.");
           router.push("/login");
         }
+        return; // finally will set isLoading to false
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchSessionAndClients();
+
+    return () => {
+      isMounted = false; // Cleanup on unmount
+    };
   }, [router]);
 
   // useEffect for resetting transfer form - Re-adding this
@@ -388,15 +351,31 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-700 ml-5">
+          <h1 className="text-2xl font-semibold poppins-medium text-gray-700 ml-5">
             Admin Client Dashboard
           </h1>
           <button
             onClick={async () => {
-              await fetch("/api/auth/signout", { method: "POST" });
-              router.push("/login");
+              try {
+                console.log(
+                  "Attempting to sign out using next-auth/react signOut..."
+                );
+                // Use the client-side signOut function
+                await signOut({ redirect: false });
+
+                console.log(
+                  "Client-side signOut processed. Navigating to /..."
+                );
+                toast.success("Logged out successfully!");
+                window.location.assign("/"); // Navigate after signOut completes
+              } catch (error) {
+                console.error("Error during client-side signOut:", error);
+                toast.error("An error occurred during logout.");
+                // Fallback navigation if signOut itself fails catastrophically before redirecting
+                window.location.assign("/");
+              }
             }}
-            className="mr-[15px] px-4 py-2 bg-[#650000] text-white rounded hover:bg-red-600"
+            className="md:mr-[25px] px-4 py-2 bg-[#650000] text-white rounded hover:bg-red-600"
           >
             Logout
           </button>

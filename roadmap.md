@@ -68,3 +68,15 @@
   - `README.md` (setup + database instructions)
   - Prisma schema + seed script
 - Email submission to `cblanco@biocollections.com`
+
+## Phase 6: Testing
+
+- [ ] **Setup Testing Environment**
+  - Install Jest, React Testing Library, ts-jest
+  - Configure Jest (jest.config.js, jest.setup.js)
+- [ ] **Write Unit Tests**
+  - Test core components (e.g., SearchBox, ClientTable)
+  - Test utility functions (e.g., data transformers)
+  - Test API route handlers (with mocking)
+
+Email submission to `cblanco@biocollections.com`

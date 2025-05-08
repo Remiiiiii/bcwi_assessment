@@ -8,7 +8,7 @@ export interface Client {
   savingsBalance: number | null;
   isActive?: boolean;
   accountNumber: string;
-  accountType: "Checking" | "Savings";
+  accountType: "Checking" | "Savings" | "N/A";
   balance: number | null;
 }
 

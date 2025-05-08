@@ -120,3 +120,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.poppins-medium {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.poppins-thin {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}

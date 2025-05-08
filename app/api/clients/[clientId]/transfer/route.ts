@@ -89,7 +89,6 @@ export async function POST(
       newCheckingBalance = newCheckingBalance.minus(amountToTransfer);
       newSavingsBalance = newSavingsBalance.plus(amountToTransfer);
     } else {
-      // fromAccountType === "savings"
       if (newSavingsBalance.lessThan(amountToTransfer)) {
         return NextResponse.json(
           { error: "Insufficient funds in savings account" },
@@ -112,7 +111,6 @@ export async function POST(
   } catch (error) {
     console.error("Error processing transfer:", error);
     if (error instanceof SyntaxError) {
-      // JSON parsing error
       return NextResponse.json(
         { error: "Invalid request body" },
         { status: 400 }

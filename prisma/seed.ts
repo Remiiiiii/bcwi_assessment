@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 async function main() {
   console.log(`Start seeding ...`);
 
-  // Delete all existing clients
   console.log(`Deleting existing clients...`);
   await prisma.client.deleteMany({});
   console.log(`Existing clients deleted.`);
@@ -131,10 +130,9 @@ async function main() {
     },
   ];
 
-  // Use createMany for efficiency
   const result = await prisma.client.createMany({
     data: clientsData,
-    skipDuplicates: true, // Optional: if you run the seed multiple times
+    skipDuplicates: true,
   });
 
   console.log(`Created ${result.count} new clients.`);

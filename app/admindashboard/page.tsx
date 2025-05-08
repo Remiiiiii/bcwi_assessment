@@ -36,6 +36,7 @@ import {
   transformClientData,
 } from "@/lib/clientDataTransformer"; // Added import
 import { signOut } from "next-auth/react"; // Import signOut from next-auth/react
+import { formatDateToMMDDYYYY } from "@/app/lib/dateUtils";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -147,7 +148,7 @@ export default function AdminDashboardPage() {
     setIsLoading(true);
     try {
       const query = new URLSearchParams();
-      if (params.name) query.append("name", params.name);
+      if (params.name) query.append("name", params.name.trim());
       if (params.birthday) query.append("birthday", params.birthday);
       // params.accountType will be 'Checking' or 'Savings' due to SearchBox changes
       if (params.accountType) query.append("accountType", params.accountType);
@@ -429,7 +430,7 @@ export default function AdminDashboardPage() {
                   </Label>
                   <Input
                     id="birthday"
-                    value={selectedClient.birthday}
+                    value={formatDateToMMDDYYYY(selectedClient.birthday)}
                     readOnly
                     className="col-span-3"
                   />

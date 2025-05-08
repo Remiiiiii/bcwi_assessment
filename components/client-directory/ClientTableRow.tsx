@@ -1,4 +1,5 @@
 import { ClientTableRowProps } from "@/types/client";
+import { formatDateToMMDDYYYY } from "@/app/lib/dateUtils";
 
 export function ClientTableRow({
   client,
@@ -13,7 +14,7 @@ export function ClientTableRow({
         {client.name}
       </td>
       <td className="py-3 px-4 text-center text-[rgba(119,119,119,1)] text-base font-normal">
-        {client.birthday}
+        {formatDateToMMDDYYYY(client.birthday)}
       </td>
       <td className="py-3 px-4 text-center text-[rgba(119,119,119,1)] text-base font-normal">
         {client.accountType}

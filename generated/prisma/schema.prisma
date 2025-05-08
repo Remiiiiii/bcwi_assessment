@@ -22,7 +22,7 @@ enum ClientType {
 model Client {
   id                    String   @id @default(cuid())
   name                  String
-  birthday              String
+  birthday              DateTime
   checkingAccountNumber String?  @unique
   checkingBalance       Decimal? @db.Decimal(10, 2)
   savingsAccountNumber  String?  @unique

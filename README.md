@@ -73,7 +73,7 @@ These instructions will get you a copy of the project up and running on your loc
     - `AUTH_SECRET`: A secret key for NextAuth.js. Generate one using `openssl rand -hex 32` or similar.
     - `AUTH_GOOGLE_ID` & `AUTH_GOOGLE_SECRET`: Google OAuth credentials (if you want to use Google login).
     - `AUTH_GITHUB_ID` & `AUTH_GITHUB_SECRET`: GitHub OAuth credentials (if you want to use GitHub login).
-    - (Add any other environment variables your application might need for NextAuth.js providers or other services)
+    - (Add any other environment variables your application might need for NextAuth.js providers or other services, e.g., `NEXTAUTH_URL` for production deployments)
 
 4.  **Database Setup (Prisma):**
     Apply schema changes to your database and seed it:

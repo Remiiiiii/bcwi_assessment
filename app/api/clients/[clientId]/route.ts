@@ -3,9 +3,16 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@/generated/prisma";
 import { auth } from "../../auth/[...nextauth]/route";
 
+// Define explicit type for route context parameters
+interface RouteContext {
+  params: {
+    clientId: string;
+  };
+}
+
 export async function GET(
   request: NextRequest,
-  context: { params: { clientId: string } }
+  context: RouteContext // Use the defined interface
 ) {
   const session = await auth();
   if (!session || !session.user) {
@@ -40,7 +47,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: { clientId: string } }
+  context: RouteContext // Use the defined interface
 ) {
   const session = await auth();
   if (!session || !session.user) {
@@ -127,7 +134,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: { clientId: string } }
+  context: RouteContext // Use the defined interface
 ) {
   const session = await auth();
   if (!session || !session.user) {

@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 // import { PrismaClient } from "../../generated/prisma"; // Remove old import
 import { auth } from "../auth/[...nextauth]/route";
-import { Prisma } from "../../generated/prisma";
+import { Prisma } from "@/generated/prisma";
 import prisma from "@/lib/prisma"; // Import shared instance
 
 // Temporarily removing auth to test Prisma access

@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { PrismaClient } from "../../../../generated/prisma";
+import { PrismaClient } from "@/generated/prisma";
 import { auth } from "../../../auth/[...nextauth]/route";
 import { Decimal } from "@prisma/client/runtime/library";
 

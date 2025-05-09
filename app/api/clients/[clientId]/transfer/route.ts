@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { PrismaClient } from "@/generated/prisma";
-import { auth } from "../../../auth/[...nextauth]/route";
+import { auth } from "@/app/auth";
 import { Decimal } from "@prisma/client/runtime/library";
 
 const prisma = new PrismaClient();

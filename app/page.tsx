@@ -1,4 +1,4 @@
-import { auth } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@/app/auth";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";

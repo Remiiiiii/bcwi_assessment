@@ -57,6 +57,4 @@ export const authConfig: NextAuthConfig = {
 
 export const {
   handlers: { GET, POST },
-  signIn,
-  signOut,
 } = NextAuth(authConfig);

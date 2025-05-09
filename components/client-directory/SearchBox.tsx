@@ -87,20 +87,20 @@ export function SearchBox({ onSearch }: SearchBoxProps) {
                 aria-label="Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="h-[50px] rounded-[10px] border-2 border-[#650000] focus:ring-2 focus:ring-[#650000] focus:ring-offset-2 w-full text-sm px-3 pt-2 placeholder:text-[#E0E0E0]"
+                className="h-[50px] rounded-[10px] border-2 border-[#650000] focus:ring-2 focus:ring-[#650000] focus:ring-offset-2 w-full text-sm px-3 pt-2 placeholder:text-[#E0E0E0] "
               />
             </div>
-            <div className="relative w-full md:basis-[250px] md:shrink">
-              <span className="absolute -top-2 left-3 text-[10px] font-medium text-[#454545] bg-card px-1">
+            <div className="relative w-full md:basis-[300px] md:shrink">
+              <span className="absolute -top-2 left-3 text-[10px] font-medium text-[#454545] bg-card px-1 poppins-thin">
                 Birthday
               </span>
               <Input
                 id="search-birthday"
                 type="text"
-                placeholder="MM/DD/YYYY"
+                placeholder="MM  / DD / YYYY"
                 value={birthday}
                 onChange={(e) => setBirthday(e.target.value)}
-                className="h-[50px] rounded-[10px] border-2 border-[#D9D9D9] focus:ring-2 focus:ring-[#650000] focus:ring-offset-2 w-full text-sm px-3 pt-2 placeholder:text-[#E0E0E0]"
+                className="h-[50px] rounded-[10px] border-2 border-[#D9D9D9] focus:ring-2 focus:ring-[#650000] focus:ring-offset-2 w-full text-sm px-3 pt-2 placeholder:text-[#E0E0E0] poppins-thin"
               />
             </div>
             <div className="relative w-full md:basis-[250px] md:shrink">
@@ -111,13 +111,14 @@ export function SearchBox({ onSearch }: SearchBoxProps) {
                 <SelectTrigger
                   id="search-account-type"
                   aria-label="Account Type"
-                  className="h-[50px] rounded-[10px] border-2 border-[#D9D9D9] focus:ring-2 focus:ring-[#650000] focus:ring-offset-2 w-full text-sm px-3 pt-2 pb-2 placeholder:text-[#E0E0E0] flex items-center"
+                  className="h-[50px] rounded-[10px] border-2 border-[#D9D9D9] focus:ring-2 focus:ring-[#650000] focus:ring-offset-2 w-full text-sm px-3 pt-2 pb-2 placeholder:text-[#E0E0E0] flex items-center poppins-thin"
                 >
                   <SelectValue placeholder="Select Account Type" />
                 </SelectTrigger>
-                <SelectContent className="rounded-[10px]">
+                <SelectContent className="rounded-[10px] poppins-thin">
                   <SelectItem value="Checking">Checking</SelectItem>
                   <SelectItem value="Savings">Savings</SelectItem>
+                  <SelectItem value="All">All</SelectItem>
                 </SelectContent>
               </Select>
             </div>

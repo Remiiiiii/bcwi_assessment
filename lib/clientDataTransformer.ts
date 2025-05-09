@@ -1,15 +1,15 @@
 import { Client as FrontendClientType } from "@/types/client";
 
-// Type for data coming from the API, which is JSONified Prisma data
-// Balance will be string or number, type will be string representation of enum
+
+
 export interface ApiClientData {
   id: string;
   name: string;
   birthday: string;
   checkingAccountNumber: string | null;
-  checkingBalance: string | number | null; // API might send as string or number
+  checkingBalance: string | number | null; 
   savingsAccountNumber: string | null;
-  savingsBalance: string | number | null; // API might send as string or number
+  savingsBalance: string | number | null; 
   isActive?: boolean;
 }
 
@@ -62,8 +62,8 @@ export const transformClientData = (
     savingsAccountNumber: apiClient.savingsAccountNumber,
     savingsBalance: savingsBalanceNum,
     isActive: apiClient.isActive ?? true,
-    accountNumber: accountNumber, // Use the prioritized account number
-    accountType: accountTypeDisplay, // Use the correctly typed value
-    balance: balanceDisplay, // Use the prioritized balance
+    accountNumber: accountNumber, 
+    accountType: accountTypeDisplay, 
+    balance: balanceDisplay, 
   };
 };

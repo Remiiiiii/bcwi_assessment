@@ -85,7 +85,7 @@ export default function AdminDashboardPage() {
         if (isMounted) setCurrentSession(sessionData);
 
         // 2. Fetch initial clients (only if session was successful)
-        const initialAccountType: "Checking" | "Savings" = "Checking";
+        const initialAccountType = "All";
         const clientsRes = await fetch(
           `/api/clients?activeOnly=true&accountType=${initialAccountType}`
         );
@@ -103,7 +103,7 @@ export default function AdminDashboardPage() {
           if (isMounted) {
             setClients(
               initialApiClients.map((client) =>
-                transformClientData(client, initialAccountType)
+                transformClientData(client, undefined)
               )
             );
           }
@@ -150,8 +150,10 @@ export default function AdminDashboardPage() {
       const query = new URLSearchParams();
       if (params.name) query.append("name", params.name.trim());
       if (params.birthday) query.append("birthday", params.birthday);
-      // params.accountType will be 'Checking' or 'Savings' due to SearchBox changes
-      if (params.accountType) query.append("accountType", params.accountType);
+      // Only append accountType if it's not "All"
+      if (params.accountType && params.accountType !== "All") {
+        query.append("accountType", params.accountType);
+      }
       query.append("activeOnly", "true");
 
       const response = await fetch(`/api/clients?${query.toString()}`);
@@ -159,7 +161,7 @@ export default function AdminDashboardPage() {
         throw new Error("Failed to fetch clients during search");
       }
       const searchedApiClients: ApiClientData[] = await response.json();
-      // Pass the searched accountType to the transformer, ensuring it's a valid literal or undefined
+      // Pass the account type to the transformer only if it's Checking or Savings
       const typeToTransform =
         params.accountType === "Checking" || params.accountType === "Savings"
           ? params.accountType

@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { SearchBox } from "./SearchBox";
+import "@testing-library/jest-dom";
 
 describe("SearchBox component", () => {
   const mockOnSearch = jest.fn();

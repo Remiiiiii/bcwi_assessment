@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "../generated/prisma";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 
 const prisma = new PrismaClient();
